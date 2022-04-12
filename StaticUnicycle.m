@@ -6,7 +6,7 @@ y = zeros(1,100);
 z = zeros(1,100); %assumed to be constant in model, measured from bottom of wheel to ground
 theta = linspace(0,20*pi,100); % steering angle in x-y plane in counter clockwise direction 0 at x-axis (to the left)
 delta = linspace(0,1/2*pi,100); % sideways falling angle of cycle to the right, 0 when upright and rotated around contact point with ground
-alpha = linspace(0,1/4*pi,100); % forward angle of seat with respect to wheel, rotating around the center of the wheel, 0 when upright
+alpha = linspace(0,1/2*pi,100); % forward angle of seat with respect to wheel, rotating around the center of the wheel, 0 when upright
 
 %Unicycle parameters
 r = 1; %raduis of wheel
@@ -34,7 +34,7 @@ for j=1:numtime
     end
     centerwheel = Totalrotationmatrix*centerwheel;
     saddle = Rotationmatrixalpha*saddle;
-    saddle(3,1)=saddle(3,1)+r;
+    saddle(3,1)=saddle(3,1)+r; %rotation point of saddle was around center of wheel so it now first still needs to be translated upward
     saddle=Totalrotationmatrix*saddle;
     
     %translations
@@ -47,6 +47,7 @@ for j=1:numtime
     saddle(1,1)=saddle(1,1)+x(j);
     saddle(2,1)=saddle(2,1)+y(j);
     saddle(3,1)=saddle(3,1)+z(j);
+    %collecting terms
     timeddata(j,:,:)=transpose([wheelcoord,centerwheel,saddle]);
 end
 
