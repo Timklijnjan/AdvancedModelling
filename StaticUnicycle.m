@@ -53,6 +53,9 @@ end
 
 
 %plotting
+%myVideo = VideoWriter('myVideoFile'); %open video file
+%myVideo.FrameRate = 10;  %can adjust this, 5 - 10 works well for me
+%open(myVideo)
 for i=1:numtime
     centerwheel=timeddata(i,numwheel+1,:);
     saddle = timeddata(i,numwheel+2,:);
@@ -70,9 +73,11 @@ for i=1:numtime
     zlabel('z')
     drawnow
     pause(0.05)
+    %frame = getframe(gcf); %get frame
+    %writeVideo(myVideo, frame);
     hold off
 end
-
+%close(myVideo)
 
 function Rotmat = Rotationmatrix(angle, axis)
     Rotmat = zeros(3,3);
