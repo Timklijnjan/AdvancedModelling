@@ -1,12 +1,12 @@
 %Plot static unicycle
 
 %variables
-x = linspace(0,5,100);
-y = zeros(1,100);
+x = linspace(0,0,100); %bottom of wheel
+y = zeros(1,100); %bottom of wheel
 z = zeros(1,100); %assumed to be constant in model, measured from bottom of wheel to ground
-theta = linspace(0,20*pi,100); % steering angle in x-y plane in counter clockwise direction 0 at x-axis (to the left)
-delta = linspace(0,1/2*pi,100); % sideways falling angle of cycle to the right, 0 when upright and rotated around contact point with ground
-alpha = linspace(0,1/2*pi,100); % forward angle of seat with respect to wheel, rotating around the center of the wheel, 0 when upright
+theta = linspace(0,0,100); % steering angle in x-y plane in counter clockwise direction 0 at x-axis (to the left)
+delta = linspace(0,1/2*pi,100); % sideways falling angle of cycle to the right, 0 when upright and rotated around contact point with ground, take minus sign for answers from lagrangians those are defined with clockwise angles 
+alpha = linspace(0,0,100); % forward angle of seat with respect to wheel, rotating around the center of the wheel, 0 when upright
 
 %Unicycle parameters
 r = 1; %raduis of wheel
