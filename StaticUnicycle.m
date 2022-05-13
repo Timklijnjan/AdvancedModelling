@@ -1,16 +1,20 @@
 %Plot static unicycle
 
 %variables
-x = linspace(0,0,100); %bottom of wheel
-y = zeros(1,100); %bottom of wheel
+x = linspace(0,5,100); %bottom of wheel
+y = linspace(0,-5,100); %bottom of wheel
 z = zeros(1,100); %assumed to be constant in model, measured from bottom of wheel to ground
-theta = linspace(0,0,100); % steering angle in x-y plane in counter clockwise direction 0 at x-axis (to the left)
+theta = linspace(1/2*pi,-7/5*pi,100); % steering angle in x-y plane in counter clockwise direction 0 at x-axis (to the left)
 delta = linspace(0,1/2*pi,100); % sideways falling angle of cycle to the right, 0 when upright and rotated around contact point with ground, take minus sign for answers from lagrangians those are defined with clockwise angles 
-alpha = linspace(0,0,100); % forward angle of seat with respect to wheel, rotating around the center of the wheel, 0 when upright
+alpha = linspace(0,1/2*pi,100); % forward angle of seat with respect to wheel, rotating around the center of the wheel, 0 when upright
+xback = zeros(100,3);
+
 
 %Unicycle parameters
 r = 1; %raduis of wheel
 h= 2.5; %height of saddle from center of wheel
+rvec = zeros(3,1);
+rvec(3,:)=rvec(3,:)+r;
 
 numtime=length(x);
 numwheel = 100; %number of points to plot wheel
@@ -19,8 +23,8 @@ angles = linspace(0,2*pi,numwheel);
 for j=1:numtime
     centerwheel=zeros(3,1);
     centerwheel(3,1)=r;
-    saddle = zeros(3,1);
-    saddle(3,1)=h;
+    saddleinit = zeros(3,1);
+    saddleinit(3,1)=h;
     wheelcoord = zeros(3,numwheel);
     wheelcoord(1,:) = r*cos(angles);
     wheelcoord(3,:)= r+r*sin(angles);
@@ -33,7 +37,7 @@ for j=1:numtime
         wheelcoord(:,i)=Totalrotationmatrix*wheelcoord(:,i);
     end
     centerwheel = Totalrotationmatrix*centerwheel;
-    saddle = Rotationmatrixalpha*saddle;
+    saddle = Rotationmatrixalpha*saddleinit;
     saddle(3,1)=saddle(3,1)+r; %rotation point of saddle was around center of wheel so it now first still needs to be translated upward
     saddle=Totalrotationmatrix*saddle;
     
@@ -49,6 +53,7 @@ for j=1:numtime
     saddle(3,1)=saddle(3,1)+z(j);
     %collecting terms
     timeddata(j,:,:)=transpose([wheelcoord,centerwheel,saddle]);
+    xback(j,:) = saddle - Totalrotationmatrix*(Rotationmatrixalpha*saddleinit + rvec);
 end
 
 
