@@ -53,7 +53,7 @@ for j=1:numtime
     saddle(3,1)=saddle(3,1)+z(j);
     %collecting terms
     timeddata(j,:,:)=transpose([wheelcoord,centerwheel,saddle]);
-    xback(j,:) = saddle - Totalrotationmatrix*(Rotationmatrixalpha*saddleinit + rvec);
+    %xback(j,:) = saddle - Totalrotationmatrix*(Rotationmatrixalpha*saddleinit + rvec);
 end
 
 

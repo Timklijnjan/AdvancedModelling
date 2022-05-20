@@ -31,7 +31,7 @@
 %  M__a mass of the bike
 %  I__xx,I__xy,I__xz,I__yy, I__yz, I__zz inertial momentum 
 %  v velocity of the bike
-%  x=v*cos(theta), y=v*sin(theta)
+%  x__dot=v*cos(theta), y__dot=v*sin(theta)
 %-----------------------------------------------------------------------------------------------------
 %PARAMETERS
 r__a=0.32; %Rtilde, check whether is the radius of wheel or something else
@@ -45,18 +45,20 @@ I__yy=60.62;
 I__yz=0;
 I__zz=0.15;
 I_w=0.09;
-v=0;
+v=1;
 w=v/r__a; %check whether it's true or not
 g=9.81;
 
 %----------------------------------------------------------------------------------------------------------------------------%
 %RESOLUTION
-n=100;
-dt=0.1;
+n=1000;
+dt=0.01;
+x=zeros(1,n+1);
+y=zeros(1,n+1);
 udot=zeros(3,n+1);
 uddot=zeros(3,n+1);
 u=zeros(3,n+1);
-u(:,1)=[pi/3;0;0]; %initial condition (alpha(0),theta(0),epsilon(0))
+u(:,1)=[0;0;0]; %initial condition (alpha(0),theta(0),epsilon(0))
 udot(:,1)=[0;0;0]; %initial condition (alphadot(0),thetadot(0),epsilondot(0))
 for i=1:n
     [alphaddotcoeff_1,thetaddotcoeff_final_1,epsddotcoeff_1,Q_1,equation_1_final]=equation_1(u(1,i),u(2,i),u(3,i),udot(2,i),udot(3,i),v,g);
@@ -68,6 +70,8 @@ for i=1:n
 uddot(:,i)=A\b;
 udot(:,i+1)=udot(:,i)+dt*uddot(:,i);
 u(:,i+1)=u(:,i)+dt*udot(:,i+1);
+x(1,i+1)=x(1,i)+dt*v*cos(u(2,i));
+y(1,i+1)=y(1,i)+dt*v*sin(u(2,i));
 end
 
 
@@ -107,3 +111,7 @@ plot(0:dt:n*dt,rad2deg(u(3,:)),'o-')
 % set(Ax, 'YTick',ytv, 'YTickLabel',ytl)
 xlabel('$t$', 'Interpreter','latex');
 ylabel('$\epsilon$', 'Interpreter','latex');
+
+figure(2);
+xlocs ='bike';
+Unicyclemoviemaker(x,y,u(2,:),u(3,:),u(1,:),r__a,s__2,xlocs)

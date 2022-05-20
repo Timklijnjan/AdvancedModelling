@@ -1,9 +1,6 @@
 %Plot static unicycle
-function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs)
+function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs='bike')
     %variables
-    % xlocs = 'CM'if x and y contain the locations of the center of mass,
-    % xlocs = 'bike'if x and y contain the locations of the bottom of the
-    % wheel.
     %x center of mass, center of mass is plotted as saddle
     %y center of mass, center of mass is plotted as saddle
     %theta, steering angle in x-y plane in counter clockwise direction 0 at x-axis (to the left)
@@ -18,7 +15,7 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs)
     numwheel = 100; %number of points to plot wheel
     timeddata = zeros(numtime,numwheel+2,3);
     angles = linspace(0,2*pi,numwheel);
-    if strcmp(xlocs,'CM')
+    if strcmp(xlocs,'CM'):
         for j=1:numtime
             centerwheel=zeros(3,1);
             centerwheel(3,1)=r;
@@ -55,42 +52,41 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs)
     
         end
     elseif strcmp(xlocs,'bike')
-        z =zeros(length(x));
         for j=1:numtime
-            centerwheel=zeros(3,1);
-            centerwheel(3,1)=r;
-            saddleinit = zeros(3,1);
-            saddleinit(3,1)=h;
-            wheelcoord = zeros(3,numwheel);
-            wheelcoord(1,:) = r*cos(angles);
-            wheelcoord(3,:)= r+r*sin(angles);
-            %rotations
-            Rotationmatrixepsilon = Rotationmatrix(epsilon(j),'x');
-            Rotationmatrixtheta = Rotationmatrix(theta(j),'z');
-            Rotationmatrixalpha = Rotationmatrix(alpha(j),'y');
-            Totalrotationmatrix = Rotationmatrixtheta*Rotationmatrixepsilon;
-            for i=1:numwheel
-                wheelcoord(:,i)=Totalrotationmatrix*wheelcoord(:,i);
-            end
-            centerwheel = Totalrotationmatrix*centerwheel;
-            saddle = Rotationmatrixalpha*saddleinit;
-            saddle(3,1)=saddle(3,1)+r; %rotation point of saddle was around center of wheel so it now first still needs to be translated upward
-            saddle=Totalrotationmatrix*saddle;
-            
-            %translations
-            wheelcoord(1,:) = wheelcoord(1,:) +x(j)*ones(1,numwheel);
-            wheelcoord(2,:) = wheelcoord(2,:) +y(j)*ones(1,numwheel);
-            wheelcoord(3,:) = wheelcoord(3,:) +z(j)*ones(1,numwheel);
-            centerwheel(1,1)=centerwheel(1,1)+x(j);
-            centerwheel(2,1)=centerwheel(2,1)+y(j);
-            centerwheel(3,1)=centerwheel(3,1)+z(j);
-            saddle(1,1)=saddle(1,1)+x(j);
-            saddle(2,1)=saddle(2,1)+y(j);
-            saddle(3,1)=saddle(3,1)+z(j);
-            %collecting terms
-            timeddata(j,:,:)=transpose([wheelcoord,centerwheel,saddle]);
-            %xback(j,:) = saddle - Totalrotationmatrix*(Rotationmatrixalpha*saddleinit + rvec);
-        end
+    centerwheel=zeros(3,1);
+    centerwheel(3,1)=r;
+    saddleinit = zeros(3,1);
+    saddleinit(3,1)=h;
+    wheelcoord = zeros(3,numwheel);
+    wheelcoord(1,:) = r*cos(angles);
+    wheelcoord(3,:)= r+r*sin(angles);
+    %rotations
+    Rotationmatrixdelta = Rotationmatrix(delta(j),'x');
+    Rotationmatrixtheta = Rotationmatrix(theta(j),'z');
+    Rotationmatrixalpha = Rotationmatrix(alpha(j),'y');
+    Totalrotationmatrix = Rotationmatrixtheta*Rotationmatrixdelta;
+    for i=1:numwheel
+        wheelcoord(:,i)=Totalrotationmatrix*wheelcoord(:,i);
+    end
+    centerwheel = Totalrotationmatrix*centerwheel;
+    saddle = Rotationmatrixalpha*saddleinit;
+    saddle(3,1)=saddle(3,1)+r; %rotation point of saddle was around center of wheel so it now first still needs to be translated upward
+    saddle=Totalrotationmatrix*saddle;
+    
+    %translations
+    wheelcoord(1,:) = wheelcoord(1,:) +x(j)*ones(1,numwheel);
+    wheelcoord(2,:) = wheelcoord(2,:) +y(j)*ones(1,numwheel);
+    wheelcoord(3,:) = wheelcoord(3,:) +z(j)*ones(1,numwheel);
+    centerwheel(1,1)=centerwheel(1,1)+x(j);
+    centerwheel(2,1)=centerwheel(2,1)+y(j);
+    centerwheel(3,1)=centerwheel(3,1)+z(j);
+    saddle(1,1)=saddle(1,1)+x(j);
+    saddle(2,1)=saddle(2,1)+y(j);
+    saddle(3,1)=saddle(3,1)+z(j);
+    %collecting terms
+    timeddata(j,:,:)=transpose([wheelcoord,centerwheel,saddle]);
+    %xback(j,:) = saddle - Totalrotationmatrix*(Rotationmatrixalpha*saddleinit + rvec);
+end
     end
     vec = timeddata;
     
@@ -109,7 +105,7 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs)
         plot3(saddleplot(1,:,1),saddleplot(1,:,2),saddleplot(1,:,3),'-o')
         xlim([-5,5])
         ylim([-5,5])
-        zlim([0,3])
+        zlim([0,10])
         xlabel('x')
         ylabel('y')
         zlabel('z')
