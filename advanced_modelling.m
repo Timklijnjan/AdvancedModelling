@@ -34,6 +34,9 @@
 %  x__dot=v*cos(theta), y__dot=v*sin(theta)
 %-----------------------------------------------------------------------------------------------------
 %PARAMETERS
+until_ground = true; %true or false to stop simulating when bike hits the ground
+supress_error = false; %true or false, set values for angles smaller than tol back to zero
+tol = 10^-13;
 r__a=0.32; %Rtilde, check whether is the radius of wheel or something else
 s__1=0;
 s__2=1;
@@ -51,15 +54,15 @@ g=9.81;
 
 %----------------------------------------------------------------------------------------------------------------------------%
 %RESOLUTION
-n=1000;
+n=500;
 dt=0.01;
 x=zeros(1,n+1);
 y=zeros(1,n+1);
 udot=zeros(3,n+1);
 uddot=zeros(3,n+1);
 u=zeros(3,n+1);
-u(:,1)=[0;0;0]; %initial condition (alpha(0),theta(0),epsilon(0))
-udot(:,1)=[0;pi/5;0]; %initial condition (alphadot(0),thetadot(0),epsilondot(0))
+u(:,1)=[0;0;pi/4]; %initial condition (alpha(0),theta(0),epsilon(0))
+udot(:,1)=[0;0;0]; %initial condition (alphadot(0),thetadot(0),epsilondot(0))
 for i=1:n
     [alphaddotcoeff_1,thetaddotcoeff_final_1,epsddotcoeff_1,Q_1,equation_1_final]=equation_1(u(1,i),u(2,i),u(3,i),udot(2,i),udot(3,i),v,g);
     [alphaddotcoeff_2,thetaddotcoeff_final_2,epsddotcoeff_2,Q_2,equation_2_final]=equation_2(u(1,i),u(2,i),u(3,i),udot(1,i),udot(2,i),udot(3,i),v,g);
@@ -67,11 +70,31 @@ for i=1:n
     A=[alphaddotcoeff_1 thetaddotcoeff_final_1 epsddotcoeff_1; alphaddotcoeff_2 thetaddotcoeff_final_2 epsddotcoeff_2; alphaddotcoeff_3 thetaddotcoeff_final_3 epsddotcoeff_3];
     b=[Q_1-equation_1_final;Q_2-equation_2_final;Q_3-equation_3_final];
 
-uddot(:,i)=A\b;
-udot(:,i+1)=udot(:,i)+dt*uddot(:,i);
-u(:,i+1)=u(:,i)+dt*udot(:,i+1);
-x(1,i+1)=x(1,i)+dt*v*cos(u(2,i));
-y(1,i+1)=y(1,i)+dt*v*sin(u(2,i));
+    uddot(:,i)=A\b;
+    udot(:,i+1)=udot(:,i)+dt*uddot(:,i);
+    u(:,i+1)=u(:,i)+dt*udot(:,i+1);
+    x(1,i+1)=x(1,i)+dt*v*cos(u(2,i));
+    y(1,i+1)=y(1,i)+dt*v*sin(u(2,i));
+
+    if until_ground
+        if u(1,i+1) > pi/2 || u(1,i+1) < -pi/2
+            break
+        elseif u(3,i+1) > pi/2 || u(3,i+1) < -pi/2
+            break
+        end
+    end
+
+
+end
+
+if until_ground
+    n = i;
+    ushort = u(:,1:n+1);
+    xshort = x(1,1:n+1);
+    yshort = y(1,1:n+1);
+    u = ushort;
+    x = xshort;
+    y = yshort;
 end
 
 

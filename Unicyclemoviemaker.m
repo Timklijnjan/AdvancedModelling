@@ -114,7 +114,7 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs)
         ylabel('y')
         zlabel('z')
         drawnow
-        pause(0.01)
+        pause(0.001)
         %frame = getframe(gcf); %get frame
         %writeVideo(myVideo, frame);
         hold off
