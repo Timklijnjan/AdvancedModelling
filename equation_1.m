@@ -18,15 +18,15 @@ I_w=1;
  y__dot= v*cos(theta)*theta__dot;
  %yddot=  v*(-sin(theta)*(theta__dot)^2+cos(theta)*thetaddot);
 %alphaddotcoeff_1 contains as variables only s__1,s__2
-F_alphaddotcoeff_1=@(s__1,s__2) (r__a^2 - 2*r__a*s__2 + s__1^2 + s__2^2)*M__a + 2*I__yy;
+F_alphaddotcoeff_1=@(s__1,s__2) (r__a^2 - 2*r__a*s__2 + s__1^2 + s__2^2)*M__a + I__yy;
 alphaddotcoeff_1=F_alphaddotcoeff_1(s__1,s__2);
 
 %thetaddotcoeff_1 contains as variables only alpha_hat, epsilon, s__1,s__2
-F_thetaddotcoeff_1=@(alpha__hat,epsilon,s__1,s__2) -r__a*(-s__2 + r__a)*sin(epsilon)*M__a*cos(alpha__hat) + M__a*r__a*s__1*sin(epsilon)*sin(alpha__hat) + M__a*(r__a^2 - 2*r__a*s__2 + s__1^2 + s__2^2)*sin(epsilon) + 2*I__yz;
+F_thetaddotcoeff_1=@(alpha__hat,epsilon,s__1,s__2) -r__a*(-s__2 + r__a)*sin(epsilon)*M__a*cos(alpha__hat) + M__a*r__a*s__1*sin(epsilon)*sin(alpha__hat) + M__a*(r__a^2 - 2*r__a*s__2 + s__1^2 + s__2^2)*sin(epsilon) + I__yz;
 thetaddotcoeff_1=F_thetaddotcoeff_1(alpha__hat,epsilon,s__1,s__2);
 
 %epsddotcoeff is constant
-epsddotcoeff_1=2*I__xy;
+epsddotcoeff_1=I__xy;
 
 %xddotcoeff_1 contains as variables only alpha_hat, epsilon, s__1,s__2
 F_xddotcoeff_1=@(alpha__hat,theta,epsilon,s__1,s__2) (-s__1*sin(theta)*sin(epsilon) + (-s__2 + r__a)*cos(theta))*M__a*cos(alpha__hat) + M__a*(-(-s__2 + r__a)*sin(theta)*sin(epsilon) - s__1*cos(theta))*sin(alpha__hat);
@@ -47,7 +47,7 @@ F_thetaddotextra_y_1=@(alpha__hat,theta, epsilon, s__1,s__2) v*cos(theta)*F_yddo
 thetaddotextra_y_1=F_thetaddotextra_y_1(alpha__hat,theta, epsilon, s__1,s__2);
 
 %thetaddotcoeff_final_1 contains as variables only thetaddotcoeff_1,thetaddotextra_x_1,thetaddotextra_y_1;
-F_thetaddotcoeff_final_1=@(alpha__hat,theta, epsilon, s__1,s__2) F_thetaddotcoeff_1(alpha__hat,epsilon,s__1,s__2) +F_thetaddotextra_x_1(alpha__hat,theta,epsilon,s__1,s__2) +F_thetaddotextra_y_1(alpha__hat,theta, epsilon, s__1,s__2);
+F_thetaddotcoeff_final_1=@(alpha__hat,theta, epsilon, s__1,s__2) F_thetaddotcoeff_1(alpha__hat,epsilon,s__1,s__2); % mistake x=vcos(theta) ipv xdot=vcos(theta):+F_thetaddotextra_x_1(alpha__hat,theta,epsilon,s__1,s__2) +F_thetaddotextra_y_1(alpha__hat,theta, epsilon, s__1,s__2);
 thetaddotcoeff_final_1=F_thetaddotcoeff_final_1(alpha__hat,theta, epsilon, s__1,s__2);% still to do+s__1*y__ddot*cos(theta)*sin(epsilon);
 
 %equation_1 contains as variables alpha__hat,theta, epsilon, s__1,s__2,theta__dot,epsilon__dot
@@ -55,7 +55,7 @@ F_equation_1=@(alpha__hat,theta, epsilon, s__1,s__2,theta__dot,epsilon__dot) -2*
 equation_1=F_equation_1(alpha__hat,theta, epsilon, s__1,s__2,theta__dot,epsilon__dot);
 
 %equationextra_1 contains as variables theta, xddotcoeff,yddotcoeff
-F_equationextra_1=@(alpha__hat,theta,epsilon,s__1,s__2)-v*cos(theta)*(theta__dot)^2*F_xddotcoeff_1(alpha__hat,theta,epsilon,s__1,s__2) -v*sin(theta)*(theta__dot)^2*F_yddotcoeff_1(alpha__hat,theta,epsilon,s__1,s__2);
+F_equationextra_1=@(alpha__hat,theta,epsilon,s__1,s__2) -v*sin(theta)*theta__dot*F_xddotcoeff_1(alpha__hat,theta,epsilon,s__1,s__2) +v*cos(theta)*theta__dot*F_yddotcoeff_1(alpha__hat,theta,epsilon,s__1,s__2); %mistake x=vcos(theta): -v*cos(theta)*(theta__dot)^2*F_xddotcoeff_1(alpha__hat,theta,epsilon,s__1,s__2) -v*sin(theta)*(theta__dot)^2*F_yddotcoeff_1(alpha__hat,theta,epsilon,s__1,s__2);
 equationextra_1=F_equationextra_1(alpha__hat,theta,epsilon,s__1,s__2);
 
 F_equation_1_final=@(alpha__hat,theta, epsilon, s__1,s__2,theta__dot,epsilon__dot) F_equation_1(alpha__hat,theta, epsilon, s__1,s__2,theta__dot,epsilon__dot)+F_equationextra_1(alpha__hat,theta,epsilon,s__1,s__2);

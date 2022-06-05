@@ -35,8 +35,6 @@
 %-----------------------------------------------------------------------------------------------------
 %PARAMETERS
 until_ground = true; %true or false to stop simulating when bike hits the ground
-supress_error = false; %true or false, set values for angles smaller than tol back to zero
-tol = 10^-13;
 r__a=0.32; %Rtilde, check whether is the radius of wheel or something else
 s__1=0;
 s__2=1;
@@ -48,20 +46,20 @@ I__yy=60.62;
 I__yz=0;
 I__zz=0.15;
 I_w=0.09;
-v=1;
+v=0;
 w=v/r__a; %check whether it's true or not
 g=9.81;
 
 %----------------------------------------------------------------------------------------------------------------------------%
 %RESOLUTION
-n=500;
-dt=0.01;
+n=50000;
+dt=0.001;
 x=zeros(1,n+1);
 y=zeros(1,n+1);
 udot=zeros(3,n+1);
 uddot=zeros(3,n+1);
 u=zeros(3,n+1);
-u(:,1)=[0;0;pi/4]; %initial condition (alpha(0),theta(0),epsilon(0))
+u(:,1)=[0;0;pi/10]; %initial condition (alpha(0),theta(0),epsilon(0))
 udot(:,1)=[0;0;0]; %initial condition (alphadot(0),thetadot(0),epsilondot(0))
 for i=1:n
     [alphaddotcoeff_1,thetaddotcoeff_final_1,epsddotcoeff_1,Q_1,equation_1_final]=equation_1(u(1,i),u(2,i),u(3,i),udot(2,i),udot(3,i),v,g);
@@ -137,4 +135,5 @@ ylabel('$\epsilon$', 'Interpreter','latex');
 
 figure(2);
 xlocs ='bike';
-Unicyclemoviemaker(x,y,u(2,:),u(3,:),u(1,:),r__a,s__2,xlocs)
+pausetime =0.001;
+Unicyclemoviemaker(x,y,u(2,:),u(3,:),u(1,:),r__a,s__2,xlocs,pausetime)

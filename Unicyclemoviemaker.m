@@ -1,5 +1,5 @@
 %Plot static unicycle
-function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs)
+function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs,pausetime)
     %variables
     % xlocs = 'CM'if x and y contain the locations of the center of mass,
     % xlocs = 'bike'if x and y contain the locations of the bottom of the
@@ -114,7 +114,7 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs)
         ylabel('y')
         zlabel('z')
         drawnow
-        pause(0.001)
+        pause(pausetime)
         %frame = getframe(gcf); %get frame
         %writeVideo(myVideo, frame);
         hold off
