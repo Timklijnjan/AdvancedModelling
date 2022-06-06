@@ -92,7 +92,7 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs,pausetime)
             %xback(j,:) = saddle - Totalrotationmatrix*(Rotationmatrixalpha*saddleinit + rvec);
         end
     end
-    vec = timeddata;
+    vec = 0;
     
     %plotting
     %myVideo = VideoWriter('myVideoFile'); %open video file
@@ -107,9 +107,10 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs,pausetime)
         hold on
         plot3(centerwheel(1,1,1),centerwheel(1,1,2),centerwheel(1,1,3),'.')
         plot3(saddleplot(1,:,1),saddleplot(1,:,2),saddleplot(1,:,3),'-o')
-        xlim([-5,5])
-        ylim([-5,5])
-        zlim([-3,3])
+        grid on
+        xlim([x(i)-5,x(i)+5])
+        ylim([y(i)-5,y(i)+5])
+        zlim([0,6])
         xlabel('x')
         ylabel('y')
         zlabel('z')

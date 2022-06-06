@@ -50,6 +50,6 @@ equationextra_2=F_equationextra_2(alpha__hat,theta,epsilon,s__1,s__2);
 F_equation_2_final=@(alpha__hat,theta,epsilon,alpha__hatdot,theta__dot,epsilon__dot,s__1,s__2) F_equation_2(alpha__hat,theta,epsilon,alpha__hatdot,theta__dot,epsilon__dot,s__1,s__2)+F_equationextra_2(alpha__hat,theta,epsilon,s__1,s__2);
 equation_2_final=F_equation_2_final(alpha__hat,theta,epsilon,alpha__hatdot,theta__dot,epsilon__dot,s__1,s__2);
 
-F_Q_2=@(theta,epsilon,epsilon__dot) I_w*cos(epsilon)*epsilon__dot;%I_w*w*(sin(theta)*cos(epsilon)*theta + cos(theta)*sin(epsilon)*epsilon__dot);
+F_Q_2=@(theta,epsilon,epsilon__dot) w*I_w*cos(epsilon)*epsilon__dot;%I_w*w*(sin(theta)*cos(epsilon)*theta + cos(theta)*sin(epsilon)*epsilon__dot);
 Q_2=F_Q_2(theta,epsilon,epsilon__dot);
 end

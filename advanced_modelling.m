@@ -46,20 +46,20 @@ I__yy=60.62;
 I__yz=0;
 I__zz=0.15;
 I_w=0.09;
-v=0;
+v=20;
 w=v/r__a; %check whether it's true or not
 g=9.81;
 
 %----------------------------------------------------------------------------------------------------------------------------%
 %RESOLUTION
-n=50000;
-dt=0.001;
+n=500;
+dt=0.01;
 x=zeros(1,n+1);
 y=zeros(1,n+1);
 udot=zeros(3,n+1);
 uddot=zeros(3,n+1);
 u=zeros(3,n+1);
-u(:,1)=[0;0;pi/10]; %initial condition (alpha(0),theta(0),epsilon(0))
+u(:,1)=[0;0;0]; %initial condition (alpha(0),theta(0),epsilon(0))
 udot(:,1)=[0;0;0]; %initial condition (alphadot(0),thetadot(0),epsilondot(0))
 for i=1:n
     [alphaddotcoeff_1,thetaddotcoeff_final_1,epsddotcoeff_1,Q_1,equation_1_final]=equation_1(u(1,i),u(2,i),u(3,i),udot(2,i),udot(3,i),v,g);
@@ -70,7 +70,7 @@ for i=1:n
 
     uddot(:,i)=A\b;
     udot(:,i+1)=udot(:,i)+dt*uddot(:,i);
-    u(:,i+1)=u(:,i)+dt*udot(:,i+1);
+    u(:,i+1)=u(:,i)+dt*udot(:,i);
     x(1,i+1)=x(1,i)+dt*v*cos(u(2,i));
     y(1,i+1)=y(1,i)+dt*v*sin(u(2,i));
 
@@ -86,7 +86,7 @@ for i=1:n
 end
 
 if until_ground
-    n = i;
+    n = i-1;
     ushort = u(:,1:n+1);
     xshort = x(1,1:n+1);
     yshort = y(1,1:n+1);
@@ -135,5 +135,5 @@ ylabel('$\epsilon$', 'Interpreter','latex');
 
 figure(2);
 xlocs ='bike';
-pausetime =0.001;
-Unicyclemoviemaker(x,y,u(2,:),u(3,:),u(1,:),r__a,s__2,xlocs,pausetime)
+pausetime =dt/10;
+Unicyclemoviemaker(x,y,u(2,:),-u(3,:),u(1,:),r__a,s__2,xlocs,pausetime); %minus sign for epsilon since in the model it is defined towards the positive y axis, but the movie maker uses a right handed system where it is to the negative x-axis
