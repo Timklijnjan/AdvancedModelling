@@ -15,7 +15,7 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs,pausetime)
     rvec = zeros(3,1);
     rvec(3,:)=rvec(3,:)+r;
     numtime=length(x);
-    numwheel = 100; %number of points to plot wheel
+    numwheel = 25; %number of points to plot wheel
     timeddata = zeros(numtime,numwheel+2,3);
     angles = linspace(0,2*pi,numwheel);
     if strcmp(xlocs,'CM')
@@ -98,12 +98,14 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs,pausetime)
     %myVideo = VideoWriter('myVideoFile'); %open video file
     %myVideo.FrameRate = 10;  %can adjust this, 5 - 10 works well for me
     %open(myVideo)
+    centerwheelvec = timeddata(:,numwheel+1,:);
+    saddlevec = timeddata(:,numwheel+2,:);
+    wheelcoord = timeddata(:,1:numwheel,:);
     for i=1:numtime
-        centerwheel=timeddata(i,numwheel+1,:);
-        saddle = timeddata(i,numwheel+2,:);
-        wheelcoord = timeddata(i,1:numwheel,:);
+        centerwheel=centerwheelvec(i,:,:);
+        saddle = saddlevec(i,:,:);
         saddleplot=[centerwheel,saddle];
-        plot3(wheelcoord(1,:,1),wheelcoord(1,:,2),wheelcoord(1,:,3))
+        plot3(wheelcoord(i,:,1),wheelcoord(i,:,2),wheelcoord(i,:,3))
         hold on
         plot3(centerwheel(1,1,1),centerwheel(1,1,2),centerwheel(1,1,3),'.')
         plot3(saddleplot(1,:,1),saddleplot(1,:,2),saddleplot(1,:,3),'-o')
@@ -114,8 +116,8 @@ function vec =Unicyclemoviemaker(x,y,theta,epsilon,alpha,r,h,xlocs,pausetime)
         xlabel('x')
         ylabel('y')
         zlabel('z')
-        drawnow
         pause(pausetime)
+        %drawnow
         %frame = getframe(gcf); %get frame
         %writeVideo(myVideo, frame);
         hold off
